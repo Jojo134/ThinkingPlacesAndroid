@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
 import com.google.common.collect.ImmutableMap;
 import com.strongloop.android.loopback.RestAdapter;
+import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 
 public class MainActivity extends Activity implements LocationListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -35,7 +36,8 @@ public class MainActivity extends Activity implements LocationListener, OnMapRea
     private Button btnSave;
     private RestAdapter adapter;
     private PlaceRepository placeRepository;
-    private final static String API_URL = "http://nodejs-josp.rhcloud.com/api";
+    private final static String API_URL = "http://192.168.69.108:3000/api";
+    //private final static String API_URL = "http://nodejs-josp.rhcloud.com/api";
 
 
     @Override
@@ -46,11 +48,6 @@ public class MainActivity extends Activity implements LocationListener, OnMapRea
         }
         adapter = new RestAdapter(getApplicationContext(), API_URL);
         placeRepository = adapter.createRepository(PlaceRepository.class);
-        Place place1 = placeRepository.createObject(ImmutableMap.of("name", "Place"));
-        place1.setLatitude(0);
-        place1.setLongitude(0);
-        place1.setName("oncreate");
-        place1.setRating(3);
 
         setContentView(R.layout.activity_main);
         buildGoogleApiClient();
@@ -61,12 +58,23 @@ public class MainActivity extends Activity implements LocationListener, OnMapRea
             @Override
             public void onClick(View v) {
 
-                Place place2 = placeRepository.createObject(ImmutableMap.of("name", "Place"));
-                place2.setLatitude(mCurrentLocation.getLatitude());
-                place2.setLongitude(mCurrentLocation.getLongitude());
-                place2.setName("savedtest");
-                place2.setRating(4);
-                Toast.makeText(getApplicationContext(),"saved",Toast.LENGTH_SHORT).show();
+                Place place = placeRepository.createObject(ImmutableMap.of("name", "Place"));
+                place.setLatitude(mCurrentLocation.getLatitude());
+                place.setLongitude(mCurrentLocation.getLongitude());
+                place.setName("savedtest");
+                place.setRating(rating);
+                place.save(new VoidCallback() {
+
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(),"saved", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(getApplicationContext(),"Error: " +t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
