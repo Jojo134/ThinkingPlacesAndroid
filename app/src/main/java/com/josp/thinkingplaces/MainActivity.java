@@ -36,8 +36,8 @@ public class MainActivity extends Activity implements LocationListener, OnMapRea
     private Button btnSave;
     private RestAdapter adapter;
     private PlaceRepository placeRepository;
-    private final static String API_URL = "http://192.168.69.108:3000/api";
-    //private final static String API_URL = "http://nodejs-josp.rhcloud.com/api";
+    private final static String PLACES_API_URL = Config.PLACES_API_URL;
+
 
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements LocationListener, OnMapRea
         if (!servicesAvailable()) {
             finish();
         }
-        adapter = new RestAdapter(getApplicationContext(), API_URL);
+        adapter = new RestAdapter(getApplicationContext(), PLACES_API_URL);
         placeRepository = adapter.createRepository(PlaceRepository.class);
 
         setContentView(R.layout.activity_main);

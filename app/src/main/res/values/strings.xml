@@ -7,4 +7,6 @@
     <string name="four">4</string>
     <string name="five">5</string>
     <string name="save">Save</string>
+    <string name="appwidget_text">ThinkingPlaces</string>
+    <string name="add_widget">Add widget</string>
 </resources>
